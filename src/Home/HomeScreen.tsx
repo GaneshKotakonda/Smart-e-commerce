@@ -16,7 +16,8 @@ interface Product {
   imageURL: string;
   description: string;
   category: string;
-  rating?: any;
+  rating?: number;
+  stock?: number;
 }
 
 function HomeScreen() {
@@ -68,13 +69,13 @@ function HomeScreen() {
               title={item.title}
               price={item.price}
               imageUrl={item.imageURL}
+              rating={item.rating}
               onCartButtonPress={() => {
                 dispatch(addItemsTotheCart(item));
               }}
             />
           )}
-          numColumns={2}
-          columnWrapperStyle={{ justifyContent: "space-between", margin: s(10) }}
+          contentContainerStyle={styles.listContainer}
         />
       )}
     </View>
@@ -86,7 +87,10 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: AppColors.white,
+    backgroundColor: AppColors.background,
+  },
+  listContainer: {
+    paddingVertical: vs(8),
   },
   emptyStateContainer: {
     flex: 1,
