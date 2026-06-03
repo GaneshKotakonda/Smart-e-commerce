@@ -35,7 +35,7 @@ const CartItem: FC<ICartItem> = ({
         <AppText style={styles.Text}> {title}</AppText>
         <AppText style={styles.Price} variant="bold">
           {" "}
-          $ {price}
+          $ {typeof price === "number" ? price.toFixed(2) : parseFloat(price as string).toFixed(2)}
         </AppText>
         <View style={styles.QtyConatiner}>
           <Pressable onPress ={onIncreasePress}style={styles.iconButton}>
