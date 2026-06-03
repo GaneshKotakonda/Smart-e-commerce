@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import AuthStack from "./AuthStack";
 import MainBottomTabs from "./MainBottomTabs";
@@ -10,34 +10,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setIsLoading, setUserData } from "../store/reducers/UserSlice";
+
 const Stack = createStackNavigator();
 
 const MainAppStack = () => {
-  const { UserData ,isLoading} = useSelector((state: RootState) => state.UserSlice);
+  const { UserData, isLoading } = useSelector((state: RootState) => state.UserSlice);
   const dispatch = useDispatch();
-  const isSignedIn = async () => {
-    try {
-      const storedData: any = await AsyncStorage.getItem("uid");
-      if(storedData){
-    dispatch(setUserData(JSON.parse(storedData)));
-  }else{
-    // dispatch(setIsLoading(false));
-  }
-    
-    } catch (error) {
-    // dispatch(setIsLoading(false))
+  const [isInitialized, setIsInitialized] = useState(false);
 
-    }
-    
-  };
   useEffect(() => {
-    isSignedIn;
-  }, []);
+    const checkLogin = async () => {
+      try {
+        const storedData: any = await AsyncStorage.getItem("uid");
+        if (storedData) {
+          dispatch(setUserData(JSON.parse(storedData)));
+        }
+      } catch (error) {
+        console.error("Error retrieving stored user data:", error);
+      } finally {
+        dispatch(setIsLoading(false));
+        setIsInitialized(true);
+      }
+    };
 
+    checkLogin();
+  }, [dispatch]);
 
-  // if(isLoading){
-  //   return null;
-  // }
+  // Show loading screen while checking stored login
+  if (!isInitialized) {
+    return null;
+  }
+
   return (
     <Stack.Navigator
       screenOptions={{
