@@ -1,13 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import HomeHeader from "../components/Header/HomeHeader";
-import ProductCard from "../components/Cards/ProductCard";
 import { AppColors } from "../styles/AppColors";
-import { FlatList } from "react-native-gesture-handler";
 import { s, vs } from "react-native-size-matters";
 import { useDispatch } from "react-redux";
 import { addItemsTotheCart } from "../store/reducers/CartSlice";
 import { getProductsData } from "../config/DataService";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 interface Product {
   id: number;
@@ -20,65 +18,113 @@ interface Product {
   stock?: number;
 }
 
-function HomeScreen() {
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
+interface HomeScreenProps {
+  navigation: any;
+}
 
-  const fetchData = async () => {
-    const data = await getProductsData();
-    setAllProducts(data);
-    setFilteredProducts(data);
-  };
+function HomeScreen({ navigation }: HomeScreenProps) {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<{ [key: string]: Product[] }>({});
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    const fetchData = async () => {
+      const data = await getProductsData();
+      setProducts(data);
+
+      // Group products by category
+      const grouped: { [key: string]: Product[] } = {};
+      data.forEach((product: Product) => {
+        if (!grouped[product.category]) {
+          grouped[product.category] = [];
+        }
+        grouped[product.category].push(product);
+      });
+      setCategories(grouped);
+    };
+
     fetchData();
   }, []);
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    if (query.trim() === "") {
-      setFilteredProducts(allProducts);
-    } else {
-      const filtered = allProducts.filter((product: Product) =>
-        product.title.toLowerCase().includes(query.toLowerCase()) ||
-        product.category.toLowerCase().includes(query.toLowerCase())
-      );
-      setFilteredProducts(filtered);
-    }
-  };
-
-  const dispatch = useDispatch();
+  const featuredProducts = products.slice(0, 3);
+  const categoryNames = Object.keys(categories).slice(0, 3);
 
   return (
-    <View style={styles.container}>
-      <HomeHeader onSearchChange={handleSearch} searchValue={searchQuery} />
-      {filteredProducts.length === 0 ? (
-        <View style={styles.emptyStateContainer}>
-          <Text style={styles.emptyStateText}>No products found</Text>
-          <Text style={styles.emptyStateSubText}>
-            Try searching with different keywords
-          </Text>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Image source={require("../assets/Images/app-logo.png")} style={styles.logo} />
+        <Text style={styles.headerTitle}>Smart Shop</Text>
+      </View>
+
+      {/* Diwali Sale Banner */}
+      <View style={styles.bannerContainer}>
+        <View style={styles.banner}>
+          <Text style={styles.bannerTitle}>🎉 Diwali Sale 🎉</Text>
+          <Text style={styles.bannerSubtitle}>Up to 50% OFF</Text>
+          <Text style={styles.bannerDescription}>On Selected Items</Text>
         </View>
-      ) : (
-        <FlatList
-          data={filteredProducts}
-          keyExtractor={(item: Product) => item.id.toString()}
-          renderItem={({ item }: { item: Product }) => (
-            <ProductCard
-              title={item.title}
-              price={item.price}
-              imageUrl={item.imageURL}
-              rating={item.rating}
-              onCartButtonPress={() => {
-                dispatch(addItemsTotheCart(item));
-              }}
-            />
-          )}
-          contentContainerStyle={styles.listContainer}
-        />
-      )}
-    </View>
+      </View>
+
+      {/* Featured Products Section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Featured Items</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productScroll}>
+          {featuredProducts.map((product) => (
+            <View key={product.id} style={styles.featuredCard}>
+              <Image
+                source={{ uri: product.imageURL }}
+                style={styles.featuredImage}
+              />
+              <Text style={styles.featuredTitle} numberOfLines={2}>
+                {product.title}
+              </Text>
+              <Text style={styles.featuredPrice}>${product.price.toFixed(2)}</Text>
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => dispatch(addItemsTotheCart(product))}
+              >
+                <MaterialCommunityIcons name="cart-plus" size={s(16)} color="white" />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+
+      {/* Category Sections */}
+      {categoryNames.map((categoryName) => (
+        <View key={categoryName} style={styles.section}>
+          <Text style={styles.sectionTitle}>
+            {categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.productScroll}>
+            {categories[categoryName]?.slice(0, 4).map((product) => (
+              <View key={product.id} style={styles.categoryCard}>
+                <Image
+                  source={{ uri: product.imageURL }}
+                  style={styles.categoryImage}
+                />
+                <Text style={styles.categoryTitle} numberOfLines={1}>
+                  {product.title}
+                </Text>
+                <Text style={styles.categoryPrice}>${product.price.toFixed(2)}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      ))}
+
+      {/* Browse All Button */}
+      <TouchableOpacity
+        style={styles.browseButton}
+        onPress={() => navigation.navigate("AllProducts")}
+      >
+        <Text style={styles.browseButtonText}>Browse All Products</Text>
+        <MaterialCommunityIcons name="chevron-right" size={s(20)} color="white" />
+      </TouchableOpacity>
+
+      <View style={styles.bottomSpacing} />
+    </ScrollView>
   );
 }
 
@@ -89,25 +135,164 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: AppColors.background,
   },
-  listContainer: {
-    paddingVertical: vs(8),
-  },
-  emptyStateContainer: {
-    flex: 1,
-    justifyContent: "center",
+  header: {
+    flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: s(20),
+    backgroundColor: AppColors.primary,
+    paddingHorizontal: s(15),
+    paddingVertical: vs(12),
   },
-  emptyStateText: {
+  logo: {
+    width: s(30),
+    height: s(30),
+    tintColor: AppColors.white,
+  },
+  headerTitle: {
+    marginLeft: s(10),
+    fontSize: s(18),
+    fontWeight: "bold",
+    color: AppColors.white,
+    fontFamily: "nunito-bold",
+  },
+  bannerContainer: {
+    paddingHorizontal: s(12),
+    paddingVertical: vs(12),
+  },
+  banner: {
+    backgroundColor: "#FF6B6B",
+    borderRadius: s(12),
+    paddingVertical: vs(24),
+    paddingHorizontal: s(16),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bannerTitle: {
+    fontSize: s(24),
+    fontWeight: "bold",
+    color: AppColors.white,
+    marginBottom: vs(4),
+    fontFamily: "nunito-bold",
+  },
+  bannerSubtitle: {
     fontSize: s(18),
     fontWeight: "600",
-    color: AppColors.black,
-    marginBottom: vs(8),
-    textAlign: "center",
+    color: AppColors.white,
+    marginBottom: vs(4),
+    fontFamily: "nunito-bold",
   },
-  emptyStateSubText: {
+  bannerDescription: {
     fontSize: s(14),
-    color: AppColors.medGrey,
-    textAlign: "center",
+    color: AppColors.white,
+    fontFamily: "nunito-medium",
+  },
+  section: {
+    marginTop: vs(20),
+    paddingHorizontal: s(12),
+  },
+  sectionTitle: {
+    fontSize: s(16),
+    fontWeight: "600",
+    color: AppColors.black,
+    marginBottom: vs(12),
+    fontFamily: "nunito-bold",
+  },
+  productScroll: {
+    marginHorizontal: -s(12),
+    paddingHorizontal: s(12),
+  },
+  featuredCard: {
+    width: s(140),
+    marginRight: s(12),
+    backgroundColor: AppColors.white,
+    borderRadius: s(8),
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  featuredImage: {
+    width: "100%",
+    height: s(120),
+    resizeMode: "contain",
+    backgroundColor: AppColors.lightGrey,
+  },
+  featuredTitle: {
+    fontSize: s(12),
+    fontFamily: "nunito-medium",
+    paddingHorizontal: s(8),
+    paddingTop: vs(8),
+    color: AppColors.black,
+    lineHeight: s(14),
+  },
+  featuredPrice: {
+    fontSize: s(14),
+    fontWeight: "600",
+    paddingHorizontal: s(8),
+    paddingTop: vs(4),
+    color: AppColors.black,
+    fontFamily: "nunito-bold",
+  },
+  addButton: {
+    backgroundColor: AppColors.primary,
+    padding: s(8),
+    marginHorizontal: s(8),
+    marginVertical: vs(8),
+    borderRadius: s(6),
+    alignItems: "center",
+  },
+  categoryCard: {
+    width: s(130),
+    marginRight: s(12),
+    backgroundColor: AppColors.white,
+    borderRadius: s(8),
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  categoryImage: {
+    width: "100%",
+    height: s(100),
+    resizeMode: "contain",
+    backgroundColor: AppColors.lightGrey,
+  },
+  categoryTitle: {
+    fontSize: s(12),
+    fontFamily: "nunito-medium",
+    paddingHorizontal: s(8),
+    paddingTop: vs(8),
+    color: AppColors.black,
+  },
+  categoryPrice: {
+    fontSize: s(12),
+    fontWeight: "600",
+    paddingHorizontal: s(8),
+    paddingBottom: vs(8),
+    color: AppColors.primary,
+    fontFamily: "nunito-bold",
+  },
+  browseButton: {
+    flexDirection: "row",
+    backgroundColor: AppColors.primary,
+    marginHorizontal: s(12),
+    marginVertical: vs(24),
+    paddingVertical: vs(14),
+    paddingHorizontal: s(16),
+    borderRadius: s(8),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  browseButtonText: {
+    fontSize: s(16),
+    fontWeight: "600",
+    color: AppColors.white,
+    fontFamily: "nunito-bold",
+  },
+  bottomSpacing: {
+    height: vs(20),
   },
 });
