@@ -5,19 +5,20 @@ import axios from "axios";
 
 export const getProductsData = async () => {
   try {
-    const response = await axios.get("https://fakestoreapi.com/products");
-    const products = response.data.map((item: any) => ({
+    const response = await axios.get("https://dummyjson.com/products?limit=100");
+    const products = response.data.products.map((item: any) => ({
       id: item.id,
       title: item.title,
       price: item.price,
-      imageURL: item.image,
+      imageURL: item.thumbnail,
       description: item.description,
       category: item.category,
       rating: item.rating,
+      stock: item.stock,
     }));
     return products;
   } catch (error) {
-    console.error("Error fetching products from Fake Store API:", error);
+    console.error("Error fetching products from DummyJSON API:", error);
     return [];
   }
 };

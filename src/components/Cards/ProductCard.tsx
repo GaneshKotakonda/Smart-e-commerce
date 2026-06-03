@@ -1,26 +1,22 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { FC, FunctionComponent } from "react";
+import React, { FC } from "react";
 import { s, vs } from "react-native-size-matters";
 import { AppColors } from "../../styles/AppColors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
 interface IproductCard {
   imageUrl: string;
   price: number;
   title: string;
   onCartButtonPress?: () => void;
+  rating?: number;
 }
-const ProductCard: FC<IproductCard> = ({ onCartButtonPress, title, imageUrl, price }) => {
+
+const ProductCard: FC<IproductCard> = ({ onCartButtonPress, title, imageUrl, price, rating }) => {
   return (
     <View style={styles.container}>
-      {/* cart button */}
-      <View style={styles.cartButton}>
-        <TouchableOpacity onPress={onCartButtonPress}>
-          <MaterialCommunityIcons name="cart-heart" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-
-      {/*image section */}
-      <View style={styles.imagecontainer}>
+      {/* Image on left */}
+      <View style={styles.imageContainer}>
         <Image
           style={styles.img}
           source={{
@@ -28,10 +24,27 @@ const ProductCard: FC<IproductCard> = ({ onCartButtonPress, title, imageUrl, pri
           }}
         />
       </View>
-      {/*details section */}
-      <View style={styles.Detailscontainer}>
-        <Text style={styles.text}> {title}</Text>
-        <Text style={styles.price}> {price} $</Text>
+
+      {/* Details on right */}
+      <View style={styles.detailsContainer}>
+        <Text style={styles.title} numberOfLines={2}>{title}</Text>
+        
+        {rating && (
+          <View style={styles.ratingContainer}>
+            <MaterialCommunityIcons name="star" size={s(14)} color="#FFA500" />
+            <Text style={styles.rating}>{rating.toFixed(1)}</Text>
+          </View>
+        )}
+
+        <Text style={styles.price}>${price.toFixed(2)}</Text>
+
+        <TouchableOpacity 
+          style={styles.cartButton}
+          onPress={onCartButtonPress}
+        >
+          <MaterialCommunityIcons name="cart-plus" size={s(18)} color="white" />
+          <Text style={styles.cartButtonText}>Add to Cart</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -41,48 +54,73 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   container: {
-    height: vs(190),
-    width: s(160),
-    borderRadius: s(10),
+    flexDirection: "row",
     backgroundColor: AppColors.white,
-    shadowOffset: { width: 1, height: 4 },
-    shadowOpacity: 0.2,
-  },
-  imagecontainer: {
+    marginHorizontal: s(12),
+    marginVertical: vs(8),
+    borderRadius: s(8),
     overflow: "hidden",
-    borderTopLeftRadius: s(10),
-    borderTopRightRadius: s(10),
-    height: s(130),
-    width: "100%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  imageContainer: {
+    width: s(120),
+    height: vs(120),
+    backgroundColor: AppColors.lightGrey,
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
   },
   img: {
     width: "100%",
     height: "100%",
+    resizeMode: "contain",
   },
-  Detailscontainer: {
-    paddingTop: s(18),
-    paddingHorizontal: s(10),
-    paddingBottom: s(10),
+  detailsContainer: {
+    flex: 1,
+    padding: s(12),
+    justifyContent: "space-between",
   },
-  text: {
-    fontSize: s(15),
-    paddingBottom: s(4),
+  title: {
+    fontSize: s(13),
+    fontFamily: "nunito-bold",
+    color: AppColors.black,
+    lineHeight: s(18),
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: vs(4),
+  },
+  rating: {
+    fontSize: s(12),
+    marginLeft: s(4),
+    color: AppColors.medGrey,
     fontFamily: "nunito-medium",
   },
   price: {
-    fontSize: s(13),
+    fontSize: s(16),
     fontFamily: "nunito-bold",
+    color: AppColors.black,
+    marginTop: vs(6),
   },
   cartButton: {
-    position: "absolute",
-    height: s(28),
-    width: s(28),
-    borderRadius: s(14),
-    backgroundColor: AppColors.black,
-    left: s(5),
-    top: s(5),
-    zIndex: 1,
-    justifyContent: "center",
+    flexDirection: "row",
+    backgroundColor: AppColors.primary,
+    paddingVertical: vs(8),
+    paddingHorizontal: s(10),
+    borderRadius: s(6),
     alignItems: "center",
+    justifyContent: "center",
+    marginTop: vs(8),
+  },
+  cartButtonText: {
+    color: AppColors.white,
+    fontSize: s(12),
+    fontFamily: "nunito-bold",
+    marginLeft: s(6),
   },
 });
