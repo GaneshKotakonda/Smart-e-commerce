@@ -7,6 +7,7 @@ interface IproductCard {
   imageUrl: string;
   price: number;
   title: string;
+  onCartButtonPress?: () => void;
 }
 const ProductCard: FC<IproductCard> = ({ onCartButtonPress, title, imageUrl, price }) => {
   return (
