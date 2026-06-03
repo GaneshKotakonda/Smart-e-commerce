@@ -27,7 +27,7 @@ const CartScreen = () => {
 
   const TotalCost = items.reduce((acc,item)=>acc+item.sum,0)
 
-  const OrderTotal = TotalCost + Shipping+Taxes;
+  const OrderTotal = TotalCost + Shipping + Taxes;
 
   return (
     <>
