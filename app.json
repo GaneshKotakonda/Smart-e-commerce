@@ -2,7 +2,7 @@
   "expo": {
     "name": "SmartECommerce",
     "slug": "SmartECommerce",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -21,7 +21,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.ganeshreddy09.SmartECommerce"
+      "package": "com.ganeshreddy09.SmartECommerce",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/icon.png"
