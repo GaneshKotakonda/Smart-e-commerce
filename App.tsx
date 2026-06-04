@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { StyleSheet } from "react-native";
 import AppSafeView from "./src/components/Views/AppSafeView";
 import { NavigationContainer } from "@react-navigation/native";
 import MainAppStack from "./src/navigations/MainAppStack";
@@ -8,12 +9,21 @@ import { store } from "./src/store/store";
 import FlashMessage from "react-native-flash-message";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./src/localisation/i18n";
-import React from "react";
+import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+
 export default function App() {
   const [fontLoaded] = useFonts({
     "nunito-bold": require("./src/assets/fonts/Nunito-Bold.ttf"),
     "nunito-medium": require("./src/assets/fonts/Nunito-Medium.ttf"),
+    ...Entypo.font,
+    ...Ionicons.font,
+    ...MaterialCommunityIcons.font,
   });
+
+  if (!fontLoaded) {
+    return null;
+  }
+
   return (
     <AppSafeView style={styles.container}>
       <FlashMessage position="top" />
