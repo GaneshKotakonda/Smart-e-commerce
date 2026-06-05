@@ -2,8 +2,6 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { FC } from "react";
 import { s } from "react-native-size-matters";
 import AppText from "../components/Texts/AppText";
-import App from "../../App";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { AppColors } from "../styles/AppColors";
 interface ICartItem {
   title: string;
@@ -35,24 +33,24 @@ const CartItem: FC<ICartItem> = ({
         <AppText style={styles.Text}> {title}</AppText>
         <AppText style={styles.Price} variant="bold">
           {" "}
-          $ {price}
+          $ {typeof price === "number" ? price.toFixed(2) : parseFloat(price as string).toFixed(2)}
         </AppText>
         <View style={styles.QtyConatiner}>
           <Pressable onPress ={onIncreasePress}style={styles.iconButton}>
-            <AntDesign name="plus" size={18} color="black" />
+            <Text style={styles.qtyIcon}>+</Text>
           </Pressable>
           <AppText style={{ paddingHorizontal: s(10), paddingVertical: s(4) }}>
             {qty}
           </AppText>
           <Pressable onPress={onReducePress} style={styles.iconButton}>
-            <AntDesign name="minus" size={18} color="black" />
+            <Text style={styles.qtyIcon}>−</Text>
           </Pressable>
         </View>
       </View>
       {/* delete */}
       <View style={styles.deleteContainer}>
         <Pressable onPress={onDeletePress} style={styles.deletebutton}>
-          <AntDesign name="delete" size={15} color="red" />
+          <Text style={styles.deleteIcon}>×</Text>
           <AppText style={styles.deleteText}>delete</AppText>
         </Pressable>
       </View>
@@ -125,5 +123,17 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
+  },
+  qtyIcon: {
+    color: AppColors.black,
+    fontFamily: "nunito-bold",
+    fontSize: s(16),
+    lineHeight: s(18),
+  },
+  deleteIcon: {
+    color: AppColors.red,
+    fontFamily: "nunito-bold",
+    fontSize: s(16),
+    lineHeight: s(18),
   },
 });

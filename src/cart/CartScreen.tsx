@@ -15,6 +15,7 @@ import {
   removeItemFormTheCart,
 } from "../store/reducers/CartSlice";
 import { Shipping, Taxes } from "../constants/constants";
+import { showMessage } from "react-native-flash-message";
 
 
 const CartScreen = () => {
@@ -27,7 +28,7 @@ const CartScreen = () => {
 
   const TotalCost = items.reduce((acc,item)=>acc+item.sum,0)
 
-  const OrderTotal = TotalCost + Shipping+Taxes;
+  const OrderTotal = TotalCost + Shipping + Taxes;
 
   return (
     <>
@@ -52,6 +53,10 @@ const CartScreen = () => {
             }}
             onIncreasePress={() => {
               dispatch(addItemsTotheCart(item));
+              showMessage({
+                message: "Item added to cart",
+                type: "success",
+              });
             }}
           ></CartItem>
         )}

@@ -25,6 +25,9 @@ const AppInput: React.FC<AppInputProps> = ({
   return (
     <TextInput
       placeholder={placeholder}
+      placeholderTextColor={AppColors.medGrey}
+      cursorColor={AppColors.primary}
+      selectionColor={AppColors.primary}
       secureTextEntry={secureTextEntry}
       value={value}
       onChangeText={onChangeText}
@@ -46,5 +49,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginVertical: s(10),
     paddingStart: s(10),
+    color: AppColors.black,
+    fontFamily: "nunito-medium",
+    fontSize: s(14),
   },
 })

@@ -7,24 +7,32 @@ import { s } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
 import { SheetManager } from 'react-native-actions-sheet'
 import LanguageActionSheet from '../components/Languages/LanguageActionSheet'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useDispatch } from 'react-redux'
+import { logout } from '../store/reducers/UserSlice'
 
 const ProfileScreen = () => {
-  const naviagtion= useNavigation();
-  const handelLogout= async ()=>{
-      await AsyncStorage.removeItem("uid");
-      naviagtion.navigate("AuthStack")
-  }
+  const navigation: any = useNavigation();
+  const dispatch = useDispatch();
+  
+  const handleLogout = () => {
+    dispatch(logout());
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "AuthStack" }],
+    });
+  };
+
   return (
     <View>
-      <HomeHeader></HomeHeader>
-      <AppText variant='bold' style={{marginTop:s(5),fontSize:s(18)}}> Hello Ganesh, </AppText>
-<ProfileSectionButton title="my orders" onPress={()=>naviagtion.navigate("MyOrderScreen")}/> 
-<ProfileSectionButton title="language" onPress={()=>{SheetManager.show("Lang_Sheet")}}/> 
-<LanguageActionSheet/>
-<ProfileSectionButton title="logout" onPress={handelLogout}/> 
-
- </View>
+      <HomeHeader />
+      <AppText variant='bold' style={{ marginTop: s(5), fontSize: s(18) }}>
+        Hello User,
+      </AppText>
+      <ProfileSectionButton title="my orders" onPress={() => navigation.navigate("MyOrderScreen")} />
+      <ProfileSectionButton title="language" onPress={() => { SheetManager.show("Lang_Sheet") }} />
+      <LanguageActionSheet />
+      <ProfileSectionButton title="logout" onPress={handleLogout} />
+    </View>
   )
 }
 
