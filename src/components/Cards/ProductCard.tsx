@@ -2,7 +2,6 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { FC } from "react";
 import { s, vs } from "react-native-size-matters";
 import { AppColors } from "../../styles/AppColors";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 interface IproductCard {
   imageUrl: string;
@@ -31,7 +30,7 @@ const ProductCard: FC<IproductCard> = ({ onCartButtonPress, title, imageUrl, pri
         
         {rating && (
           <View style={styles.ratingContainer}>
-            <MaterialCommunityIcons name="star" size={s(14)} color="#FFA500" />
+            <Text style={styles.starIcon}>★</Text>
             <Text style={styles.rating}>{rating.toFixed(1)}</Text>
           </View>
         )}
@@ -42,7 +41,7 @@ const ProductCard: FC<IproductCard> = ({ onCartButtonPress, title, imageUrl, pri
           style={styles.cartButton}
           onPress={onCartButtonPress}
         >
-          <MaterialCommunityIcons name="cart-plus" size={s(18)} color="white" />
+          <Text style={styles.cartButtonIcon}>🛒</Text>
           <Text style={styles.cartButtonText}>Add to Cart</Text>
         </TouchableOpacity>
       </View>
@@ -101,6 +100,11 @@ const styles = StyleSheet.create({
     color: AppColors.medGrey,
     fontFamily: "nunito-medium",
   },
+  starIcon: {
+    color: "#FFA500",
+    fontSize: s(14),
+    lineHeight: s(16),
+  },
   price: {
     fontSize: s(16),
     fontFamily: "nunito-bold",
@@ -122,5 +126,9 @@ const styles = StyleSheet.create({
     fontSize: s(12),
     fontFamily: "nunito-bold",
     marginLeft: s(6),
+  },
+  cartButtonIcon: {
+    fontSize: s(16),
+    lineHeight: s(18),
   },
 });

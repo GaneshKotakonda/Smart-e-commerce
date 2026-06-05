@@ -15,6 +15,7 @@ import {
   removeItemFormTheCart,
 } from "../store/reducers/CartSlice";
 import { Shipping, Taxes } from "../constants/constants";
+import { showMessage } from "react-native-flash-message";
 
 
 const CartScreen = () => {
@@ -52,6 +53,10 @@ const CartScreen = () => {
             }}
             onIncreasePress={() => {
               dispatch(addItemsTotheCart(item));
+              showMessage({
+                message: "Item added to cart",
+                type: "success",
+              });
             }}
           ></CartItem>
         )}
