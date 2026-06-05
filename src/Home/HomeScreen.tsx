@@ -5,7 +5,7 @@ import { s, vs } from "react-native-size-matters";
 import { useDispatch } from "react-redux";
 import { addItemsTotheCart } from "../store/reducers/CartSlice";
 import { getProductsData } from "../config/DataService";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { showMessage } from "react-native-flash-message";
 
 interface Product {
   id: number;
@@ -82,9 +82,16 @@ function HomeScreen({ navigation }: HomeScreenProps) {
               <Text style={styles.featuredPrice}>${product.price.toFixed(2)}</Text>
               <TouchableOpacity
                 style={styles.addButton}
-                onPress={() => dispatch(addItemsTotheCart(product))}
+                onPress={() => {
+                  dispatch(addItemsTotheCart(product));
+                  showMessage({
+                    message: "Item added to cart",
+                    type: "success",
+                  });
+                }}
               >
-                <MaterialCommunityIcons name="cart-plus" size={s(16)} color="white" />
+                <Text style={styles.addButtonIcon}>🛒</Text>
+                <Text style={styles.addButtonText}>Add to Cart</Text>
               </TouchableOpacity>
             </View>
           ))}
@@ -120,7 +127,7 @@ function HomeScreen({ navigation }: HomeScreenProps) {
         onPress={() => navigation.navigate("AllProducts")}
       >
         <Text style={styles.browseButtonText}>Browse All Products</Text>
-        <MaterialCommunityIcons name="chevron-right" size={s(20)} color="white" />
+        <Text style={styles.browseButtonIcon}>›</Text>
       </TouchableOpacity>
 
       <View style={styles.bottomSpacing} />
@@ -235,12 +242,24 @@ const styles = StyleSheet.create({
     fontFamily: "nunito-bold",
   },
   addButton: {
+    flexDirection: "row",
     backgroundColor: AppColors.primary,
     padding: s(8),
     marginHorizontal: s(8),
     marginVertical: vs(8),
     borderRadius: s(6),
     alignItems: "center",
+    justifyContent: "center",
+  },
+  addButtonText: {
+    color: AppColors.white,
+    fontFamily: "nunito-bold",
+    fontSize: s(11),
+    marginLeft: s(6),
+  },
+  addButtonIcon: {
+    fontSize: s(16),
+    lineHeight: s(18),
   },
   categoryCard: {
     width: s(130),
@@ -291,6 +310,12 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: AppColors.white,
     fontFamily: "nunito-bold",
+  },
+  browseButtonIcon: {
+    color: AppColors.white,
+    fontSize: s(24),
+    marginLeft: s(6),
+    lineHeight: s(24),
   },
   bottomSpacing: {
     height: vs(20),

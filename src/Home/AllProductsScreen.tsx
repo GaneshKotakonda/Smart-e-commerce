@@ -8,6 +8,7 @@ import { s, vs } from "react-native-size-matters";
 import { useDispatch } from "react-redux";
 import { addItemsTotheCart } from "../store/reducers/CartSlice";
 import { getProductsData } from "../config/DataService";
+import { showMessage } from "react-native-flash-message";
 
 interface Product {
   id: number;
@@ -72,6 +73,10 @@ function AllProductsScreen() {
               rating={item.rating}
               onCartButtonPress={() => {
                 dispatch(addItemsTotheCart(item));
+                showMessage({
+                  message: "Item added to cart",
+                  type: "success",
+                });
               }}
             />
           )}

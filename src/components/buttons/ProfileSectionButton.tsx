@@ -3,8 +3,6 @@ import React, { FC } from "react";
 import AppText from "../Texts/AppText";
 import { AppColors } from "../../styles/AppColors";
 import { s, vs } from "react-native-size-matters";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import HomeHeader from "../Header/HomeHeader";
 interface IprofileButton{
     onPress: ()=>void;
     title: string;
@@ -15,7 +13,7 @@ const ProfileSectionButton: FC<IprofileButton> = ({ onPress, title }) => {
       <AppText variant="medium" style={styles.textTitle}>
         {title}
       </AppText>
-      <FontAwesome5 name="arrow-circle-right" size={24} color="black" />
+      <Text style={styles.arrowIcon}>›</Text>
     </TouchableOpacity>
   );
 };
@@ -23,7 +21,7 @@ export default ProfileSectionButton;
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    borderBottomColor: AppColors.lightGray,
+    borderBottomColor: AppColors.lightGrey,
     paddingBottom: vs(10),
     marginTop: vs(14),
     paddingHorizontal: s(10),
@@ -41,5 +39,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     marginHorizontal: s(8),
+  },
+  arrowIcon: {
+    color: AppColors.black,
+    fontSize: s(26),
+    lineHeight: s(28),
   },
 });

@@ -1,14 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Text } from "react-native";
 import HomeScreen from "../Home/HomeScreen";
 import AllProductsScreen from "../Home/AllProductsScreen";
 import ProfileScreen from "../profile/ProfileScreen";
 import CartScreen from "../cart/CartScreen";
 import { AppColors } from "../styles/AppColors";
 import { s, vs } from "react-native-size-matters";
-import { Ionicons } from "@expo/vector-icons";
-import Entypo from "@expo/vector-icons/Entypo";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -43,22 +41,26 @@ export default function MainBottomTabs() {
     >
       <Tab.Screen
         options={{
-          tabBarIcon: () => <Entypo name="home" size={24} color="black" />,
+          tabBarIcon: ({ color }) => (
+            <Text style={{ color, fontSize: s(20) }}>🏠</Text>
+          ),
         }}
         name="HomeScreen"
         component={HomeStackNavigator}
       />
       <Tab.Screen
         options={{
-          tabBarIcon: () => <Ionicons name="cart" size={26} color="black" />,
+          tabBarIcon: ({ color }) => (
+            <Text style={{ color, fontSize: s(20) }}>🛒</Text>
+          ),
         }}
         name="CartScreen"
         component={CartScreen}
       />
       <Tab.Screen
         options={{
-          tabBarIcon: () => (
-            <MaterialCommunityIcons name="account" size={26} color="black" />
+          tabBarIcon: ({ color }) => (
+            <Text style={{ color, fontSize: s(20) }}>👤</Text>
           ),
         }}
         name="ProfileScreen"
