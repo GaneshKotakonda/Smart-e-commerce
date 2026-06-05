@@ -3,7 +3,6 @@ import React from "react";
 import { s } from "react-native-size-matters";
 import AppText from "../components/Texts/AppText";
 import AppButton from "../components/buttons/AppButton";
-import Feather from "@expo/vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
 import { AppColors } from "../styles/AppColors";
 const EmptyCart = () => {
@@ -16,7 +15,7 @@ const EmptyCart = () => {
         alignItems: "center",
       }}
     >
-      <Feather name="shopping-bag" size={120} color="black" style={{paddingBottom:s(30) ,opacity:.8}}/>
+      <Text style={styles.emptyIcon}>🛒</Text>
       <AppText style={styles.txt} variant="bold">
         {" "}
         Your Cart is Empty
@@ -48,5 +47,12 @@ const styles = StyleSheet.create({
     marginTop: s(20),
     marginHorizontal: s(50),
     width: "80%",
+  },
+  emptyIcon: {
+    color: AppColors.black,
+    fontSize: s(90),
+    lineHeight: s(100),
+    opacity: 0.8,
+    paddingBottom: s(30),
   },
 });

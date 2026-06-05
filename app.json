@@ -2,11 +2,11 @@
   "expo": {
     "name": "SmartECommerce",
     "slug": "SmartECommerce",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -20,15 +20,29 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.ganeshreddy09.SmartECommerce",
+      "versionCode": 2
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.png"
     },
     "extra": {
       "eas": {
         "projectId": "2f0bbb50-47d1-49e0-80d0-39c7e2083e14"
       }
-    }
+    },
+    "plugins": [
+      "expo-asset",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./src/assets/fonts/Nunito-Bold.ttf",
+            "./src/assets/fonts/Nunito-Medium.ttf"
+          ]
+        }
+      ]
+    ]
   }
 }
