@@ -11,6 +11,7 @@ A modern cross-platform e-commerce mobile application built with React Native an
 * Multi-language support (i18n)
 * Responsive mobile UI
 * Promotional banners and featured products
+* Product reviews and ratings
 * Flash notifications and alerts
 * Redux state management
 * Cross-platform support (Android & iOS)
@@ -170,10 +171,7 @@ https://github.com/GaneshKotakonda/Smart-e-commerce
 * Payment gateway integration
 * Product search optimization
 * Wishlist functionality
-* Order history
 * Push notifications
-* Product reviews and ratings
-
 ## License
 
 This project is intended for educational and portfolio purposes.
